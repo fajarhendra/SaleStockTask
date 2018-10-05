@@ -4,7 +4,7 @@
 		module="finatra-task-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20181005215047"
+		publication="20181006064655"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>
