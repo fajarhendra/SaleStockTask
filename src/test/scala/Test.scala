@@ -7,7 +7,15 @@ object Test extends App {
   System.setProperty("hadoop.home.dir", "C:\\hadoop")
 
   val dirToReadExcel = System.getProperty("user.dir") + "/upload/Toko Ijah.xlsx"
-  val dirToWriteCsv= System.getProperty("user.dir") + "/database/"
+  val dirToWriteCsv = System.getProperty("user.dir") + "/database/"
+  val dirFileBarangMasuk = dirToWriteCsv + "BarangMasuk.csv"
+  val dirFileBarangKeluar = dirToWriteCsv + "BarangKeluar.csv"
+
   SparkFunc.processingExcelToCsv(dirToReadExcel, dirToWriteCsv)
-  SparkFunc.queryLaporanNilaiBarang(dirToWriteCsv+"BarangMasuk.csv")
+
+  SparkFunc.loadCsvBarangMasukToDB(dirFileBarangMasuk)
+  SparkFunc.loadCsvBarangKeluarToDB(dirFileBarangKeluar)
+
+  SparkFunc.queryLaporanNilaiBarang(dirFileBarangMasuk)
+  SparkFunc.queryLaporanPenjualan(dirFileBarangKeluar)
 }

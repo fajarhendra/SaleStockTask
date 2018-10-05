@@ -12,9 +12,9 @@ import org.apache.spark.sql.SQLContext
 import scala.collection.mutable.ListBuffer
 
 object SparkFunc {
-  private val dbStockBarang: sql.DataFrame = null
-  private val dbBarangMasuk: sql.DataFrame = null
-  private val dbBarangKeluar: sql.DataFrame = null
+  private var dbStockBarang: sql.DataFrame = null
+  private var dbBarangMasuk: sql.DataFrame = null
+  private var dbBarangKeluar: sql.DataFrame = null
 
   def getDbStockBarang(): sql.DataFrame = {
     dbStockBarang
@@ -70,7 +70,8 @@ object SparkFunc {
       .option("delimiter", ",")
       .option("maxColumns", 1000)
       .csv(dirToRead)
-    df
+    dbBarangMasuk = df
+    dbBarangMasuk
   }
 
   def loadCsvBarangKeluarToDB(dirToRead: String): sql.DataFrame = {
@@ -79,7 +80,8 @@ object SparkFunc {
       .option("delimiter", ",")
       .option("maxColumns", 1000)
       .csv(dirToRead)
-    df
+    dbBarangKeluar = df
+    dbBarangKeluar
   }
 
 
@@ -88,9 +90,9 @@ object SparkFunc {
     if (dirToWrite.contains("StockBarang")) {
       rowData.append("SKU,Nama_Item,Jumlah_Sekarang\n")
     } else if (dirToWrite.contains("BarangMasuk")) {
-      rowData.append("Waktu,SKU,Nama_Barang,Jumlah_Pemesanan,Jumlah_Diterima,Harga_Beli,Total,Nomer_Kwitansi,Catatan\n")
+      rowData.append("Waktu,SKU_Barang_Masuk,Nama_Barang,Jumlah_Pemesanan,Jumlah_Diterima,Harga_Beli,Total,Nomer_Kwitansi,Catatan\n")
     } else if (dirToWrite.contains("BarangKeluar")) {
-      rowData.append("Waktu,SKU,Nama_Barang,Jumlah_Keluar,Harga_Jual,Total,Catatan\n")
+      rowData.append("Waktu,SKU_Barang_Keluar,Nama_Barang,Jumlah_Keluar,Harga_Jual,Total,ID_Pesanan\n")
     }
 
     val dfDB = df.collect() // header tidak terambil
@@ -100,6 +102,9 @@ object SparkFunc {
         for (i <- 0 to row.size - 1) {
           if (i == 2) {
             tempRowData.append(row(i).toString.replace(",", "_"))
+          }
+          else if (i == 6){
+            tempRowData.append(row(i).toString.replace("Pesanan ",""))
           }
           else {
             tempRowData.append(row(i).toString.replace("[$Rp]", "") replace(",", "."))
@@ -127,9 +132,20 @@ object SparkFunc {
   }
 
   def queryLaporanNilaiBarang(dirFile: String): Unit = {
-    val df = loadCsvBarangMasukToDB(dirFile)
+    val df = dbBarangMasuk
     df.createOrReplaceTempView("barang_masuk")
-    val result = df.sqlContext.sql("""SELECT 'SKU',`Nama_Barang`,SUM(`Jumlah_Diterima`) AS `JUMLAH`,SUM(`Harga_Beli`)/COUNT(`Harga_Beli`) AS `Rata-Rata_Harga_Beli(Rp)`, SUM(`Jumlah_Diterima`)*SUM(`Harga_Beli`)/COUNT(`Harga_Beli`) AS `TOTAL(Rp)` FROM barang_masuk GROUP BY `SKU`,`Nama_Barang` """)
+    val result = df.sqlContext.sql("""SELECT `SKU_Barang_Masuk`,`Nama_Barang`,SUM(`Jumlah_Diterima`) AS `JUMLAH`,SUM(`Harga_Beli`)/COUNT(`Harga_Beli`) AS `Rata-Rata_Harga_Beli(Rp)`, SUM(`Jumlah_Diterima`)*SUM(`Harga_Beli`)/COUNT(`Harga_Beli`) AS `TOTAL(Rp)` FROM barang_masuk GROUP BY `SKU_Barang_Masuk`,`Nama_Barang` """)
+    result.show()
+  }
+  def queryLaporanPenjualan(dirFile: String): Unit = {
+    val dfPenjualan = dbBarangKeluar
+    val dfBarangMasuk = dbBarangMasuk
+    dfBarangMasuk.createOrReplaceTempView("barang_masuk")
+    val dfBarangMsk = dfBarangMasuk.sqlContext.sql("""SELECT `SKU_Barang_Masuk`,`Harga_Beli` FROM barang_masuk """)
+    val dfJoin = dfPenjualan.join(dfBarangMsk,dfPenjualan("SKU_Barang_Keluar") === dfBarangMasuk("SKU_Barang_Masuk")).drop("Total")
+    dfJoin.show()
+    dfJoin.createOrReplaceTempView("penjualan")
+    val result = dfJoin.sqlContext.sql("""SELECT `ID_Pesanan`,`Waktu`,`SKU_Barang_Keluar` as `SKU`, `Nama_Barang`,`Jumlah_Keluar` as `Jumlah`, `Harga_Jual`, `Jumlah_Keluar`*`Harga_Jual` as `Total`, `Harga_Beli`, (`Jumlah_Keluar`*`Harga_Jual`)-(`Jumlah_Keluar`*`Harga_Beli`) AS `Laba(Rp)` FROM penjualan GROUP BY `ID_Pesanan`,`Waktu`,`SKU_Barang_Keluar`, `Nama_Barang`,`Jumlah_Keluar`, `Harga_Jual`, `Harga_Beli` """)
     result.show()
   }
 }
