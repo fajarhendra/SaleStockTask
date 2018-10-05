@@ -1,6 +1,13 @@
-cara penggunaan aplikasi
-menggunakan OS windows
-contoh directory aplikasi
+IntelliJ IDEA 2017.3.5 (Ultimate Edition)
+Build #IU-173.4674.33, built on March 6, 2018
+Licensed to Rizky Solechudin
+Subscription is active until June 4, 2019
+JRE: 1.8.0_152-release-1024-b15 amd64
+JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
+Windows 10 10.0
+sbt version = latest
+
+
 anggap bahwa project ini di ekstrak ke /home/user/project-saya/
 -buat folder ke /home/user/project-saya/Upload
 -buat folder ke /home/user/project-saya/Database
