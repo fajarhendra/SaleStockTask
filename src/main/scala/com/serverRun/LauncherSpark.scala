@@ -6,7 +6,7 @@ object LauncherSpark {
   def run(): Unit = {
       println("PROCESS DATABASE")
       //linux
-        System.setProperty("hadoop.home.dir", "/home/dremio")
+        System.setProperty("hadoop.home.dir", "/home")
       //windows
 //      System.setProperty("hadoop.home.dir", "C:\\hadoop")
 
