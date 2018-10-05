@@ -9,4 +9,5 @@ object Test extends App {
   val dirToReadExcel = System.getProperty("user.dir") + "/upload/Toko Ijah.xlsx"
   val dirToWriteCsv= System.getProperty("user.dir") + "/database/"
   SparkFunc.processingExcelToCsv(dirToReadExcel, dirToWriteCsv)
+  SparkFunc.queryLaporanNilaiBarang(dirToWriteCsv+"BarangMasuk.csv")
 }
