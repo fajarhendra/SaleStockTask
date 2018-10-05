@@ -14,8 +14,8 @@ setelah selesai ini adalah beberapa service yang disediakan (bisa menggunakan RE
 2. http://localhost:8085/load/dataBarangMasuk (untuk get data json dari database barang masuk)
 3. http://localhost:8085/load/dataBarangKeluar (untuk get data json dari database barang keluar)
 4. http://localhost:8085/load/laporanNilaiBarang (untuk get data json dari laporan nilai barang)
-4. http://localhost:8085/load/laporanPenjualan (untuk get data json dari laporan penjualan)
+5. http://localhost:8085/load/laporanPenjualan (untuk get data json dari laporan penjualan)
 
 untuk export laporan Nilai Barang dan Penjualan
 1. http://localhost:8085/export/laporanNilaiBarang (hasil export laporan Nilai Barang akan muncul pada /home/user/project-saya/Export)
-1. http://localhost:8085/export/laporanPenjualan (hasil export laporan Penjualan akan muncul pada /home/user/project-saya/Export)
+2. http://localhost:8085/export/laporanPenjualan (hasil export laporan Penjualan akan muncul pada /home/user/project-saya/Export)
