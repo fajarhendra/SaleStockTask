@@ -1,4 +1,5 @@
 cara penggunaan aplikasi
+menggunakan OS windows
 contoh directory aplikasi
 anggap bahwa project ini di ekstrak ke /home/user/project-saya/
 -buat folder ke /home/user/project-saya/Upload
