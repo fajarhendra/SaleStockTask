@@ -8,9 +8,39 @@ import com.twitter.inject.Logging
 import com.twitter.util.Future
 
 class ServiceController @Inject()(subject: Provider[Option[UUID]]) extends Controller(subject) with Logging {
-  get("/load/inventory") { request: Request =>
-    val rslt = Map("a" -> 1,"b" -> 2,"c" -> 3)
-    toResponse(Future(rslt), response, Status.Ok)
+
+  get("/load/stockBarang") { request: Request =>
+    val result = ServiceControllerHelper.getDataStokBarang()
+    toResponse(Future(result), response, Status.Ok)
   }
 
+  get("/load/dataBarangMasuk") { request: Request =>
+    val result = ServiceControllerHelper.getDataBarangMasuk()
+    toResponse(Future(result), response, Status.Ok)
+  }
+
+  get("/load/dataBarangKeluar") { request: Request =>
+    val result = ServiceControllerHelper.getDataBarangKeluar()
+    toResponse(Future(result), response, Status.Ok)
+  }
+
+  get("/load/laporanNilaiBarang") { request: Request =>
+    val result = ServiceControllerHelper.getLaporanNilaiBarang()
+    toResponse(Future(result), response, Status.Ok)
+  }
+
+  get("/load/laporanPenjualan") { request: Request =>
+    val result = ServiceControllerHelper.getLaporanPenjualan()
+    toResponse(Future(result), response, Status.Ok)
+  }
+
+  get("/export/laporanNilaiBarang") { request: Request =>
+    val result = ServiceControllerHelper.exportLaporanNilaiBarang()
+    toResponse(Future(result), response, Status.Ok)
+  }
+
+  get("/export/laporanPenjualan") { request: Request =>
+    val result = ServiceControllerHelper.exportLaporanPenjualan()
+    toResponse(Future(result), response, Status.Ok)
+  }
 }

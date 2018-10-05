@@ -128,7 +128,7 @@ libraryDependencies ++= Seq(
   "com.github.xiaodongw" %% "swagger-finatra" % versions.swagger,
 
   //test
-  "ch.qos.logback" % "logback-classic" % versions.logback % "test",
+//  "ch.qos.logback" % "logback-classic" % versions.logback % "test",
   "com.twitter" %% "finatra-http" % versions.finatra % "test",
   "com.twitter" %% "finatra-jackson" % versions.finatra % "test",
   "com.twitter" %% "inject-server" % versions.finatra % "test",

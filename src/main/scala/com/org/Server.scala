@@ -1,8 +1,9 @@
 package com.org
 
 import com.org.common.json.CustomJacksonModule
-import com.org.controller.{ServiceController, UserController}
+import com.org.controller.{ServiceController, ServiceControllerHelper, UserController}
 import com.org.security.{AuthFilter, AuthModule, CorsFilter}
+import com.serverRun.LauncherSpark
 import com.twitter.concurrent.AsyncStream
 import com.twitter.finagle.{Service, Websocket}
 import com.twitter.finagle.http.{Request, Response}
@@ -37,7 +38,7 @@ class Server extends HttpServer {
       .filter[AuthFilter]
       .filter[CorsFilter]
       .add[ServiceController]
-//      .add[PostController]
+      .add[UserController]
   }
 
 
@@ -70,4 +71,10 @@ class Server extends HttpServer {
   }
 
   Websocket.serve(":3005", service)
+  try {
+    LauncherSpark.run()
+  }
+  catch {
+    case e : Exception => e.printStackTrace()
+  }
 }
