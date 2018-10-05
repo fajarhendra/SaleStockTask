@@ -6,9 +6,9 @@ object LauncherSpark {
   def run(): Unit = {
       println("PROCESS DATABASE")
       //linux
-      //  System.setProperty("hadoop.home.dir", "/home/dremio")
+        System.setProperty("hadoop.home.dir", "/home/dremio")
       //windows
-      System.setProperty("hadoop.home.dir", "C:\\hadoop")
+//      System.setProperty("hadoop.home.dir", "C:\\hadoop")
 
       val dirToReadExcel = System.getProperty("user.dir") + "/Upload/Toko Ijah.xlsx"
       val dirToWriteCsv = System.getProperty("user.dir") + "/Database/"
